@@ -1,14 +1,12 @@
 ---
 version: 2.1
 orbs:
-  tfenv: suzuki-shunsuke/tfenv@dev:2cef4b1583bd61007bd0624066629ca584a5926f
+  tfenv: suzuki-shunsuke/tfenv@dev:9f659a1a3d8feb5c9f2736c0fb29b517488ea12f
 workflows:
   build:
     jobs:
       - tfenv/setup:
           name: setup
-          checkout_dir: src
-          dir: .ci
 
       - tfenv/test:
           name: test foo/staging
@@ -34,6 +32,7 @@ workflows:
             - setup
             - test foo/staging
             - test foo/production
+          result_dir: changed
           setup_dir: .ci
 
       - tfenv/apply:
@@ -42,7 +41,6 @@ workflows:
             - setup
             - test foo/staging
             - test foo/production
-          checkout_dir: src
           filters:
             branches:
               only:
