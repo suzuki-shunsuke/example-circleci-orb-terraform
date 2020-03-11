@@ -1,30 +1,32 @@
 ---
 version: 2.1
 orbs:
-  tfenv: suzuki-shunsuke/tfenv@0.1.0
+  tfenv: suzuki-shunsuke/tfenv@dev:2cef4b1583bd61007bd0624066629ca584a5926f
 workflows:
   build:
     jobs:
       - tfenv/setup:
           name: setup
+          checkout_dir: src
+          dir: .ci
 
       - tfenv/test:
           name: test foo/staging
           requires:
             - setup
-          dir: services/foo/staging
+          dir: src/services/foo/staging
           custom_tests:
             - tflint:
-                dir: services/foo/staging
+                dir: src/services/foo/staging
 
       - tfenv/test:
           name: test foo/production
           requires:
             - setup
-          dir: services/foo/production
+          dir: src/services/foo/staging
           custom_tests:
             - tflint:
-                dir: services/foo/production
+                dir: src/services/foo/staging
 
       - tfenv/check_changed:
           name: Check changed states
@@ -32,6 +34,7 @@ workflows:
             - setup
             - test foo/staging
             - test foo/production
+          setup_dir: .ci
 
       - tfenv/apply:
           name: apply
@@ -39,6 +42,7 @@ workflows:
             - setup
             - test foo/staging
             - test foo/production
+          checkout_dir: src
           filters:
             branches:
               only:
@@ -47,27 +51,35 @@ workflows:
 # Custom test with tflint
 commands:
   install_tflint:
+    parameters:
+      dir:
+        type: string
     steps:
       - run:
           name: Install tflint
           shell: /bin/bash -eu -o pipefail
           command: |
+            bin_dir=$PWD/<< parameters.dir >>
+            mkdir -p $bin_dir
+            dirpath=$(mktemp -d)
+            cd $dirpath
             curl -LO https://github.com/terraform-linters/tflint/releases/download/v0.15.1/tflint_linux_amd64.zip
             unzip tflint_linux_amd64.zip
-            mv tflint bin
-            chmod a+x bin/tflint
-            rm tflint_linux_amd64.zip
+            mv tflint $bin_dir/tflint
+            chmod a+x $bin_dir/tflint
+            rm -R $dirpath
   tflint:
     parameters:
       dir:
         type: string
     steps:
-      - install_tflint
+      - install_tflint:
+          dir: .ci/bin
       - run:
           name: tflint
           shell: /bin/bash -eu -o pipefail
           command: |
-            cd src/<< parameters.dir >>
+            cd << parameters.dir >>
             if ! tflint; then
               echo_error "tflint is failure"
               github-comment -template ":x: [Job Link]($CIRCLE_BUILD_URL) [<< parameters.dir >>] tflint is failure"
