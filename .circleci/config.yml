@@ -22,11 +22,11 @@ workflows:
           name: test foo/production
           requires:
             - setup
-          dir: src/services/foo/staging
+          dir: src/services/foo/production
           tfnotify_config_path: src/.tfnotify.yaml
           custom_tests:
             - tflint:
-                dir: src/services/foo/staging
+                dir: src/services/foo/production
 
       - tfenv/check_changed:
           name: Check changed states
