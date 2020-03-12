@@ -1,7 +1,7 @@
 ---
 version: 2.1
 orbs:
-  tfenv: suzuki-shunsuke/tfenv@dev:64b98547d3cfc348d278f9b02f4d92ba2c862340
+  tfenv: suzuki-shunsuke/tfenv@dev:26a219dd0000c2b0339a8309a4ff7167f18c22e4
 workflows:
   build:
     jobs:
@@ -13,6 +13,7 @@ workflows:
           requires:
             - setup
           dir: src/services/foo/staging
+          tfnotify_config_path: src/.tfnotify.yml
           custom_tests:
             - tflint:
                 dir: src/services/foo/staging
@@ -22,6 +23,7 @@ workflows:
           requires:
             - setup
           dir: src/services/foo/staging
+          tfnotify_config_path: src/.tfnotify.yml
           custom_tests:
             - tflint:
                 dir: src/services/foo/staging
