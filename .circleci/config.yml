@@ -1,7 +1,7 @@
 ---
 version: 2.1
 orbs:
-  tfenv: suzuki-shunsuke/tfenv@dev:a03cbf649e03ca5a2b703d5d2ffcf09eb6828768
+  tfenv: suzuki-shunsuke/tfenv@dev:cee4be5953ab2718ce60e7932e108bb841ce28cd
 workflows:
   build:
     jobs:
@@ -37,7 +37,6 @@ workflows:
             - setup
             - test foo/staging
             - test foo/production
-          result_dir: changed
           setup_dir: .ci
 
       - tfenv/apply:
