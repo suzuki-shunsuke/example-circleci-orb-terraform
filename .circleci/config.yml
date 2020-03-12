@@ -7,6 +7,9 @@ workflows:
     jobs:
       - tfenv/setup:
           name: setup
+          checkout:
+            - checkout:
+                path: src
 
       - tfenv/test:
           name: test foo/staging
