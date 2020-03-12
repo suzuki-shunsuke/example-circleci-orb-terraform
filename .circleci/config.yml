@@ -1,7 +1,7 @@
 ---
 version: 2.1
 orbs:
-  tfenv: suzuki-shunsuke/tfenv@dev:6080b5f444be2ab1aed3da1c9b14cf4e06bce76b
+  tfenv: suzuki-shunsuke/tfenv@dev:64b98547d3cfc348d278f9b02f4d92ba2c862340
 workflows:
   build:
     jobs:
