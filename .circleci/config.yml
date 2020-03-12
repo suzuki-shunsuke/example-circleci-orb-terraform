@@ -77,6 +77,7 @@ commands:
           name: tflint
           shell: /bin/bash -eu -o pipefail
           command: |
+            export PATH=$PWD/.ci/bin:$PATH
             cd << parameters.dir >>
             if ! tflint; then
               echo_error "tflint is failure"
