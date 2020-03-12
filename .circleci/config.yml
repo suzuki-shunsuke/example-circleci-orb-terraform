@@ -13,7 +13,7 @@ workflows:
           requires:
             - setup
           dir: src/services/foo/staging
-          tfnotify_config_path: src/.tfnotify.yml
+          tfnotify_config_path: src/.tfnotify.yaml
           custom_tests:
             - tflint:
                 dir: src/services/foo/staging
@@ -23,7 +23,7 @@ workflows:
           requires:
             - setup
           dir: src/services/foo/staging
-          tfnotify_config_path: src/.tfnotify.yml
+          tfnotify_config_path: src/.tfnotify.yaml
           custom_tests:
             - tflint:
                 dir: src/services/foo/staging
