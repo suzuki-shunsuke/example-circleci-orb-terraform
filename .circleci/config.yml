@@ -1,7 +1,7 @@
 ---
 version: 2.1
 orbs:
-  tfenv: suzuki-shunsuke/tfenv@dev:cee4be5953ab2718ce60e7932e108bb841ce28cd
+  tfenv: suzuki-shunsuke/tfenv@dev:fa279ed83f397e1362c81358248d48d411ca1326
 workflows:
   build:
     jobs:
@@ -10,6 +10,16 @@ workflows:
           checkout:
             - checkout:
                 path: src
+          custom_setup:
+            - run:
+                name: Install terraform
+                # requirement bash
+                # requirement curl
+                # requirement: unzip
+                command: |
+                  export PATH=$PWD/.tfenv/bin:$PATH
+                  cd src
+                  tfenv install
 
       - tfenv/test:
           name: test foo/staging
