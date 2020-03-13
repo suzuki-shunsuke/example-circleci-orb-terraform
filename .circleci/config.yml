@@ -41,6 +41,26 @@ workflows:
             - tflint:
                 dir: src/services/foo/production
 
+      - tfenv/test:
+          name: test bar/staging
+          requires:
+            - setup
+          dir: src/services/bar/staging
+          tfnotify_config_path: src/.tfnotify.yaml
+          custom_tests:
+            - tflint:
+                dir: src/services/bar/staging
+
+      - tfenv/test:
+          name: test bar/production
+          requires:
+            - setup
+          dir: src/services/bar/production
+          tfnotify_config_path: src/.tfnotify.yaml
+          custom_tests:
+            - tflint:
+                dir: src/services/bar/production
+
       - tfenv/check_changed:
           name: Check changed states
           requires:
@@ -55,6 +75,8 @@ workflows:
             - setup
             - test foo/staging
             - test foo/production
+            - test bar/staging
+            - test bar/production
           filters:
             branches:
               only:
