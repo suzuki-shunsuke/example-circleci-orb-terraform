@@ -67,6 +67,8 @@ workflows:
             - setup
             - test foo/staging
             - test foo/production
+            - test bar/staging
+            - test bar/production
           setup_dir: .ci
 
       - tfenv/apply:
