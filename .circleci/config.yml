@@ -1,7 +1,7 @@
 ---
 version: 2.1
 orbs:
-  tfenv: suzuki-shunsuke/tfenv@dev:pr-12
+  tfenv: suzuki-shunsuke/tfenv@0.3.0
   terraform: suzuki-shunsuke/terraform@0.1.0
 workflows:
   build:
