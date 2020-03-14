@@ -1,5 +1,5 @@
 resource "github_issue_label" "test_repo" {
   repository = "example-circleci-orb-tfenv"
-  name       = "foo-production"
+  name       = "simple"
   color      = "FF0000"
 }
