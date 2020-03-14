@@ -1,7 +1,8 @@
 ---
 version: 2.1
 orbs:
-  tfenv: suzuki-shunsuke/tfenv@0.2.0
+  tfenv: suzuki-shunsuke/tfenv@0.3.0
+  terraform: suzuki-shunsuke/terraform@0.1.0
 workflows:
   build:
     jobs:
@@ -54,7 +55,7 @@ workflows:
             - tflint:
                 dir: services/bar/production
 
-      - tfenv/check_changed:
+      - terraform/check_changed:
           name: Check changed states
           requires:
             - setup
