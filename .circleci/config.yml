@@ -1,16 +1,20 @@
 ---
 version: 2.1
 orbs:
-  tfenv: suzuki-shunsuke/tfenv@0.2.0
+  tfenv: suzuki-shunsuke/tfenv@dev:pr-10
 workflows:
   build:
     jobs:
       - tfenv/setup:
           name: setup
+          custom_setup:
+            - tfenv/install_tflint
 
       - tfenv/test:
           name: test
           dir: "."
+          custom_tests:
+            - tfenv/tflint
           requires:
             - setup
 
