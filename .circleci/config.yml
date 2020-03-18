@@ -1,58 +1,54 @@
 ---
 version: 2.1
 orbs:
-  tfenv: suzuki-shunsuke/tfenv@0.3.0
-  terraform: suzuki-shunsuke/terraform@0.1.0
+  terraform: suzuki-shunsuke/terraform@dev:pr-7
 workflows:
   build:
     jobs:
-      - tfenv/setup:
+      - terraform/setup:
           name: setup
           custom_setup:
-            - run:
-                name: Install terraform
-                command: |
-                  export PATH=$PWD/.tfenv/bin:$PATH
-                  tfenv install
+            - terraform/install_tflint:
+                install_dir: .orb-terraform/bin
 
-      - tfenv/test:
+      - terraform/test:
           name: test foo/staging
           requires:
             - setup
           dir: services/foo/staging
           tfnotify_config_path: .tfnotify.yaml
           custom_tests:
-            - tflint:
+            - terraform/tflint:
                 dir: services/foo/staging
 
-      - tfenv/test:
+      - terraform/test:
           name: test foo/production
           requires:
             - setup
           dir: services/foo/production
           tfnotify_config_path: .tfnotify.yaml
           custom_tests:
-            - tflint:
+            - terraform/tflint:
                 dir: services/foo/production
 
-      - tfenv/test:
+      - terraform/test:
           name: test bar/staging
           requires:
             - setup
           dir: services/bar/staging
           tfnotify_config_path: .tfnotify.yaml
           custom_tests:
-            - tflint:
+            - terraform/tflint:
                 dir: services/bar/staging
 
-      - tfenv/test:
+      - terraform/test:
           name: test bar/production
           requires:
             - setup
           dir: services/bar/production
           tfnotify_config_path: .tfnotify.yaml
           custom_tests:
-            - tflint:
+            - terraform/tflint:
                 dir: services/bar/production
 
       - terraform/check_changed:
@@ -64,7 +60,7 @@ workflows:
             - test bar/staging
             - test bar/production
 
-      - tfenv/apply:
+      - terraform/apply:
           name: apply
           requires:
             - setup
@@ -76,47 +72,3 @@ workflows:
             branches:
               only:
                 - master
-
-# Custom test with tflint
-commands:
-  install_tflint:
-    parameters:
-      install_dir:
-        type: string
-        default: bin
-    steps:
-      - run:
-          name: Install tflint
-          shell: /bin/bash -eu -o pipefail
-          command: |
-            bin_dir=$PWD/<< parameters.install_dir >>
-            mkdir -p $bin_dir
-            dirpath=$(mktemp -d)
-            cd $dirpath
-            curl -LO https://github.com/terraform-linters/tflint/releases/download/v0.15.1/tflint_linux_amd64.zip
-            unzip tflint_linux_amd64.zip
-            mv tflint $bin_dir/tflint
-            chmod a+x $bin_dir/tflint
-            rm -R $dirpath
-  tflint:
-    parameters:
-      dir:
-        type: string
-        default: "."
-      install_dir:
-        type: string
-        default: bin
-    steps:
-      - install_tflint:
-          install_dir: << parameters.install_dir >>
-      - run:
-          name: tflint
-          shell: /bin/bash -eu -o pipefail
-          command: |
-            export PATH=$PWD/<< parameters.install_dir >>:$PATH
-            cd << parameters.dir >>
-            if ! tflint; then
-              echo_error "tflint is failure"
-              github-comment -template ":x: [Job Link]($CIRCLE_BUILD_URL) [<< parameters.dir >>] tflint is failure"
-              exit 1
-            fi
