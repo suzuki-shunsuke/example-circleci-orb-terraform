@@ -7,6 +7,7 @@ workflows:
     jobs:
       - terraform/setup:
           name: setup
+          github_comment_version: 0.2.1-0
           custom_setup:
             - terraform/install_tflint:
                 install_dir: .orb-terraform/bin
