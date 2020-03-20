@@ -1,7 +1,7 @@
 ---
 version: 2.1
 orbs:
-  terraform: suzuki-shunsuke/terraform@0.2.3
+  terraform: suzuki-shunsuke/terraform@dev:pr-9
 workflows:
   build:
     jobs:
@@ -67,6 +67,7 @@ workflows:
 
       - terraform/apply:
           name: apply
+          tfnotify_config_path: .tfnotify.yaml
           requires:
             - setup
             - test foo/staging
