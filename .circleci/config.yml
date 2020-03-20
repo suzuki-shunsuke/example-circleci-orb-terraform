@@ -1,7 +1,7 @@
 ---
 version: 2.1
 orbs:
-  terraform: suzuki-shunsuke/terraform@0.2.6
+  terraform: suzuki-shunsuke/terraform@dev:pr-13
 workflows:
   build:
     jobs:
