@@ -5,7 +5,7 @@ notifier:
     token: $GITHUB_TOKEN
     repository:
       owner: suzuki-shunsuke
-      name: example-circleci-orb-tfenv
+      name: example-circleci-orb-terraform
 terraform:
   fmt:
     template: |
